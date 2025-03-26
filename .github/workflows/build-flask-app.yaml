@@ -1,0 +1,69 @@
+name: Build Flask App
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "flask-python-app/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          echo "Installing dependencies"
+          pip install -r flask-python-app/requirements.txt
+          pip install pylint
+
+      - name: Lint with Pylint
+        run: |
+          echo "Lint Checker"
+          pylint flask-python-app/app.py
+
+      # For production grade code, we should not skip this step
+      - name: Security Scan with Bandit
+        run: |
+          echo "Security Scan"
+          pip install bandit
+          bandit -r flask-python-app/ --confidence-level high --severity-level high | grep "HIGH" || true
+
+      - name: Get GitHub Run Number
+        id: run_number
+        run: echo "RUN_NUMBER=$(echo $GITHUB_RUN_NUMBER)" >> $GITHUB_OUTPUT
+
+      - name: Build Docker image
+        run: |
+          echo "Building Docker image"
+          docker build -t deepakraajesh/python-app:v1.0.${{ steps.build_image.outputs.RUN_NUMBER }} flask-python-app/
+
+      - name: Scan Docker image with Trivy
+        run: |
+          echo "Install Trivy"
+          sudo apt-get install wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+          echo "Scanning Docker image"
+          trivy image deepakraajesh/python-app:v1.0.${{ steps.run_number.outputs.RUN_NUMBER }}
+
+      - name: Docker login
+        run: |
+          echo "Logging into Docker Hub"
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push Docker image
+        run: |
+          echo "Pushing Docker image"
+          docker push deepakraajesh/python-app:v1.0.${{ steps.run_number.outputs.RUN_NUMBER }}
