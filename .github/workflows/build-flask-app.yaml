@@ -1,0 +1,109 @@
+name: Build Flask App
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - production
+    paths:
+      - "flask-python-app/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set environment variable
+        run: |
+          BRANCH="${GITHUB_REF_NAME##*/}"
+          case "$BRANCH" in
+            "main")
+              echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+              ;;
+            "staging")
+              echo "ENVIRONMENT=stage" >> $GITHUB_ENV
+              ;;
+            "production")
+              echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+              ;;
+            *)
+              echo "ENVIRONMENT=unknown" >> $GITHUB_ENV # Handle other branches
+              ;;
+          esac
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          echo "Installing dependencies"
+          pip install -r flask-python-app/requirements.txt
+          pip install pylint
+
+      - name: Lint with Pylint
+        run: |
+          echo "Lint Checker"
+          pylint flask-python-app/app.py
+
+      # For production grade code, we should not skip this step
+      - name: Security Scan with Bandit
+        run: |
+          echo "Security Scan"
+          pip install bandit
+          bandit -r flask-python-app/ --confidence-level high --severity-level high | grep "HIGH" || true
+
+      - name: Get GitHub Run Number
+        id: run_number
+        run: echo "RUN_NUMBER=$(echo $GITHUB_RUN_NUMBER)" >> $GITHUB_ENV
+
+      # Distinguish Docker Image tag based on Environment (If we use a same container registry for all environments)
+      - name: Set Docker Image Tag
+        id: build_image
+        run: |
+          case "${{ env.ENVIRONMENT }}" in
+            "dev")
+              echo "IMAGE_TAG=dev-v1.0.${{ env.RUN_NUMBER }}" >> $GITHUB_ENV
+              ;;
+            "stage")
+              echo "IMAGE_TAG=stage-v1.0.${{ env.RUN_NUMBER }}" >> $GITHUB_ENV
+              ;;
+            "prod")
+              echo "IMAGE_TAG=v1.0.${{ env.RUN_NUMBER }}" >> $GITHUB_ENV
+              ;;
+            *)
+              echo "IMAGE_TAG=unknown-v1.0.${{ env.RUN_NUMBER }}" >> $GITHUB_ENV # Handle other environments
+              ;;
+          esac
+
+
+      - name: Build Docker image
+        run: |
+          echo "Building Docker image"
+          docker build -t deepakraajesh/python-app:${{ env.IMAGE_TAG }} flask-python-app/
+
+      - name: Scan Docker image with Trivy
+        run: |
+          echo "Install Trivy"
+          sudo apt-get install wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+          echo "Scanning Docker image"
+          trivy image deepakraajesh/python-app:${{ env.IMAGE_TAG }}
+
+      - name: Docker login
+        run: |
+          echo "Logging into Docker Hub"
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push Docker image
+        run: |
+          echo "Pushing Docker image"
+          docker push deepakraajesh/python-app:${{ env.IMAGE_TAG }}
