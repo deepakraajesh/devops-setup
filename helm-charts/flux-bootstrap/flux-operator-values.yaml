@@ -1,0 +1,14 @@
+instance:
+  components:
+  - source-controller
+  - kustomize-controller
+  - helm-controller
+  - notification-controller
+  - image-reflector-controller
+  - image-automation-controller
+  sync:
+    kind: GitRepository
+    ref: "refs/heads/main"
+    path: "gitops-flux/clusters/minikube"
+    pullSecret: "flux-git-creds"
+    url: "https://github.com/deepakraajesh/devops-setup.git"

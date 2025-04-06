@@ -3,3 +3,6 @@
 
 # sops ignore
 *_sops.*
+
+# Other files to ignore
+*_ignore.yaml

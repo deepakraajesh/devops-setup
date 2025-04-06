@@ -1,0 +1,26 @@
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Provider
+metadata:
+  name: discord-provider
+  namespace: flux-system
+spec:
+  type: discord
+  channel: flux-alerts
+  secretRef:
+    name: flux-discord-secret
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: discord-alert-notifier
+  namespace: flux-system
+spec:
+  summary: "Flux Error in minikube Cluster"
+  providerRef:
+    name: discord-provider
+  eventSeverity: error
+  eventSources:
+    - kind: GitRepository
+      name: "*"
+    - kind: Kustomization
+      name: "*"
