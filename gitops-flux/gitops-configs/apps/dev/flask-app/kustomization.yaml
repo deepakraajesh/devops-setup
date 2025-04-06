@@ -45,6 +45,9 @@ patches:
       - op: replace
         path: /spec/imageRepositoryRef/namespace
         value: dev
+      - op: replace
+        path: /spec/filterTags/pattern
+        value: '^dev-v1\.0\.(\d+)$'
   # Image Update Automation
   - target:
       kind: ImageUpdateAutomation

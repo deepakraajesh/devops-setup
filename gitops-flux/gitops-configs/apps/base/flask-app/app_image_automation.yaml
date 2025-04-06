@@ -19,7 +19,7 @@ spec:
     name: flask-app-image-repo
     namespace: REPLACE_NS
   filterTags:
-    pattern: '^(\d+)-.*$'
+    pattern: REPLACE_PATTERN_BASED_ON_ENV
     extract: '$1'
   policy:
     numerical:
