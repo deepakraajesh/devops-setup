@@ -32,9 +32,6 @@ patches:
       name: flask-app-image-repo
     patch: |-
       - op: replace
-        path: /spec/image
-        value: docker.io/deepakraajesh/python-app
-      - op: replace
         path: /metadata/namespace
         value: dev
   # Image Policy
@@ -45,6 +42,9 @@ patches:
       - op: replace
         path: /metadata/namespace
         value: dev
+      - op: replace
+        path: /spec/imageRepositoryRef/namespace
+        value: dev
   # Image Update Automation
   - target:
       kind: ImageUpdateAutomation
@@ -53,6 +53,15 @@ patches:
       - op: replace
         path: /spec/update/path
         value: ./gitops-flux/gitops-configs/apps/dev
+      - op: replace
+        path: /metadata/namespace
+        value: dev
+      - op: replace
+        path: /spec/git/checkout/ref/branch
+        value: main
+      - op: replace
+        path: /spec/git/push/branch
+        value: main
   # Image update automation Alert
   - target:
       kind: Alert
