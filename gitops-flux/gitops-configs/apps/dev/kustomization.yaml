@@ -17,6 +17,14 @@ patches:
       - op: replace
         path: /metadata/namespace
         value: dev
+  # Discord Webhook Secret
+  - target:
+      kind: Secret
+      name: discord-webhook
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: dev
   # Discord Provider
   - target:
       kind: Provider
