@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # Namespace
+  - ./namespace.yaml
+  # Repo
+  - ./es-repo.yaml
+  # External Secret operator
+  - ./eso-release.yaml
+  # Secret Store
+  - ./secret-store.yaml
+  # Secret
+  # - ./awsssm-secret.enc.yaml # Created manually

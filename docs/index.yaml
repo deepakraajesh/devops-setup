@@ -3,11 +3,11 @@ entries:
   flask-app:
   - apiVersion: v1
     appVersion: 0.1.0
-    created: "2025-04-06T08:08:24.821968+05:30"
+    created: "2025-04-06T18:14:27.124261+05:30"
     description: A Flask Application
-    digest: 573a826af00cac63708913bf29b5b076b673d5c5167dc1d8033cf7a7f9371959
+    digest: 0f7eae795d81365e5bb7d2807c8a69aa15952b77ac08eeac2f01c5360bc09ab9
     name: flask-app
     urls:
     - flask-app-0.1.0.tgz
     version: 0.1.0
-generated: "2025-04-06T08:08:24.821278+05:30"
+generated: "2025-04-06T18:14:27.123646+05:30"
