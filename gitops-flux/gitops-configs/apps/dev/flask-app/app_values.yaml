@@ -1,7 +1,7 @@
 replicaCount: 2
 image:
   repository: deepakraajesh/python-app
-  tag: dev-v1.0.17 # {"$imagepolicy": "dev:flask-app-image-policy:tag"}
+  tag: dev-v1.0.18 # {"$imagepolicy": "dev:flask-app-image-policy:tag"}
   pullPolicy: IfNotPresent
 service:
   type: ClusterIP
