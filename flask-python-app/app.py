@@ -12,10 +12,10 @@ app = Flask(__name__)
 def hello():
     """
     This function returns a greeting message with the secret value
-    fetched from the MY_SECRET environment variable.
+    fetched from the APP_SECRET environment variable.
     """
-    secret_value = os.environ.get('MY_SECRET', 'Secret not found')
-    return f'Hello!!, This value "{secret_value}" is fetched from the environment variable.'
+    secret_value = os.environ.get('APP_SECRET', 'Secret not found')
+    return f'Hello!!, This value "{secret_value}" is fetched from the Secrets Manager.'
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5005)
