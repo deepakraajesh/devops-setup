@@ -1,0 +1,35 @@
+# discord Provider and Alert config for Helm completion status
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: flask-app-image-alert
+  namespace: REPLACE_NS
+spec:
+  providerRef:
+    name: discord-provider # Use same provider for all alerts
+  eventSeverity: info
+  eventMetadata:
+    Summary: REPLACE_SUMMARY
+    Cluster: REPLACE_CLUSTER
+  eventSources:
+    - kind: ImageUpdateAutomation
+      name: "*"
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: flask-app-helm-alert
+  namespace: REPLACE_NS
+spec:
+  providerRef:
+    name: discord-provider
+  eventSeverity: info # You can have different severity levels for different alerts
+  eventMetadata:
+    Summary: REPLACE_SUMMARY
+    Cluster: REPLACE_CLUSTER
+  eventSources:
+    - kind: HelmRelease
+      name: "flask-app-release"
+  inclusionList:
+    - ".*succeeded.*"
+    - ".*failed.*"

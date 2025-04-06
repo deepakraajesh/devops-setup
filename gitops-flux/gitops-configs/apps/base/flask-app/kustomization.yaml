@@ -1,0 +1,6 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./app_release.yaml
+  - ./app_image_automation.yaml
+  - ./app_alerts.yaml

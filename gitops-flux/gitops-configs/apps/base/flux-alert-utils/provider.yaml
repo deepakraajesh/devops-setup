@@ -1,0 +1,10 @@
+# Discord Provider
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Provider
+metadata:
+  name: discord-provider
+  namespace: REPLACE_NS
+spec:
+  type: discord
+  secretRef:
+    name: discord-webhook

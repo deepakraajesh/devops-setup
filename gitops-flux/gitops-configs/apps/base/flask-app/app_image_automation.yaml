@@ -1,0 +1,54 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: flask-app-image-repo
+  namespace: REPLACE_NS
+spec:
+  image: REPLACE_IMAGE_REPO_NAME
+  interval: 1m
+  provider: generic
+  secretRef:
+    name: regcred
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: flask-app-image-policy
+  namespace: REPLACE_NS
+spec:
+  imageRepositoryRef:
+    name: flask-app-image-repo
+    namespace: REPLACE_NS
+  filterTags:
+    pattern: '^(\d+)-.*$'
+    extract: '$1'
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageUpdateAutomation
+metadata:
+  name: flask-app-image-update-automation
+  namespace: REPLACE_NS
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  git:
+    checkout:
+      ref:
+        branch: REPLACE_BRANCH
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: 'Flux Automation - flask-app image tag {{range .Changed.Changes}}{{print .OldValue}} -> {{println .NewValue}}{{end}}'
+    push:
+      branch: REPLACE_BRANCH
+  update:
+    path: REPLACE_PATH
+    strategy: Setters
