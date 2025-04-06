@@ -1,14 +1,11 @@
 replicaCount: 2
-
 image:
   repository: deepakraajesh/python-app
-  tag: dev-v1.0.16 # {"$imagepolicy": "dev:flask-app-image-policy:tag"}
+  tag: dev-v1.0.17 # {"$imagepolicy": "dev:flask-app-image-policy:tag"}
   pullPolicy: IfNotPresent
-
 service:
   type: ClusterIP
   port: 5005
-
 ingress:
   enabled: true
   className: "nginx"
@@ -17,19 +14,16 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-
 hpa:
   enabled: true
   minReplicas: 2
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
-
 externalSecret:
   enabled: true
   vault:
     role: "flask-app-role"
     path: "secret/data/flask-app"
     key: "app-secret"
-
 secret:
   appSecret: "secret not fetched. Routed to default value"
