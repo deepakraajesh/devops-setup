@@ -24,3 +24,6 @@ spec:
                 secretKeyRef:
                   name: flask-app-secret
                   key: app-secret
+          envFrom:
+            - secretRef:
+                name: app-sops-secret

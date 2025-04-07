@@ -3,16 +3,16 @@ entries:
   flask-app:
   - apiVersion: v1
     appVersion: 0.1.3
-    created: "2025-04-06T20:02:59.331337+05:30"
+    created: "2025-04-08T04:00:12.482307+05:30"
     description: A Flask Application
-    digest: c9b4294fa33af49dade2fea2cf2cac190e7cf02e2d7c8c6e57642af37b8e7ca8
+    digest: d942e8353c5591289200e6082aa494960ff55428657f6ac0d28dd78121afb04f
     name: flask-app
     urls:
     - flask-app-0.1.3.tgz
     version: 0.1.3
   - apiVersion: v1
     appVersion: 0.1.2
-    created: "2025-04-06T20:02:59.331025+05:30"
+    created: "2025-04-08T04:00:12.481783+05:30"
     description: A Flask Application
     digest: 7a1154b3a2c8bf3d95bb0f8e60b74f804a1ec5f1e17058807331521c7cc39b7f
     name: flask-app
@@ -37,4 +37,4 @@ entries:
     urls:
     - flask-app-0.1.0.tgz
     version: 0.1.0
-generated: "2025-04-06T20:02:59.330395+05:30"
+generated: "2025-04-08T04:00:12.480641+05:30"

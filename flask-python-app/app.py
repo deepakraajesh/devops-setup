@@ -15,7 +15,11 @@ def hello():
     fetched from the APP_SECRET environment variable.
     """
     secret_value = os.environ.get('APP_SECRET', 'Secret not found')
-    return f'Hello!!, This value "{secret_value}" is fetched from the Secrets Manager.'
+    sops_secret_value = os.environ.get('SOPS_SECRET', 'Sops secret not found')
+    result = f'''Hello!!, This value "{secret_value}" is fetched from the Secrets Manager.\n
+                 This value "{sops_secret_value}" is fetched from the SOPS Secret.'''
+    formatted_result = result.replace('\n', '<br>')
+    return formatted_result
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5005)
