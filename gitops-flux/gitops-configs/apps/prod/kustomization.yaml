@@ -16,7 +16,7 @@ patches:
     patch: |-
       - op: replace
         path: /metadata/namespace
-        value: dev
+        value: prod
   # Discord Provider
   - target:
       kind: Provider
@@ -24,4 +24,4 @@ patches:
     patch: |-
       - op: replace
         path: /metadata/namespace
-        value: dev
+        value: prod
