@@ -7,7 +7,7 @@ service:
   type: ClusterIP
   port: 5005
 ingress:
-  enabled: true
+  enabled: false
   className: "nginx"
   hosts:
     - host: dev.flask-app.example.com
