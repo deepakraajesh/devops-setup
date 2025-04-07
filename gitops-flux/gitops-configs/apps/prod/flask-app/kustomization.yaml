@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: dev
+namespace: prod
 resources:
   - ../../base/flask-app
   - ./discord-secret.enc.yaml
@@ -20,13 +20,13 @@ patches:
     patch: |-
       - op: replace
         path: /metadata/namespace
-        value: dev
+        value: prod
       - op: replace
         path: /spec/targetNamespace
-        value: dev
+        value: prod
       - op: replace
         path: /spec/chart/spec/sourceRef/namespace
-        value: dev
+        value: prod
   # Image Repository
   - target:
       kind: ImageRepository
@@ -34,7 +34,7 @@ patches:
     patch: |-
       - op: replace
         path: /metadata/namespace
-        value: dev
+        value: prod
   # Image Policy
   - target:
       kind: ImagePolicy
@@ -42,13 +42,13 @@ patches:
     patch: |-
       - op: replace
         path: /metadata/namespace
-        value: dev
+        value: prod
       - op: replace
         path: /spec/imageRepositoryRef/namespace
-        value: dev
+        value: prod
       - op: replace
         path: /spec/filterTags/pattern
-        value: '^dev-v1\.0\.(\d+)$'
+        value: '^v1\.0\.(\d+)$'
   # Image Update Automation
   - target:
       kind: ImageUpdateAutomation
@@ -56,10 +56,10 @@ patches:
     patch: |-
       - op: replace
         path: /spec/update/path
-        value: ./gitops-flux/gitops-configs/apps/dev
+        value: ./gitops-flux/gitops-configs/apps/prod
       - op: replace
         path: /metadata/namespace
-        value: dev
+        value: prod
       - op: replace
         path: /spec/git/checkout/ref/branch
         value: main
@@ -76,10 +76,10 @@ patches:
         value: "Image updated for Flask Application deployment"
       - op: replace
         path: /spec/eventMetadata/Cluster
-        value: "Dev Cluster"
+        value: "Prod Cluster"
       - op: replace
         path: /metadata/namespace
-        value: dev
+        value: prod
   # Helm Status Alert
   - target:
       kind: Alert
@@ -90,10 +90,10 @@ patches:
         value: "Helm status for Flask Application deployment"
       - op: replace
         path: /spec/eventMetadata/Cluster
-        value: "Dev Cluster"
+        value: "Prod Cluster"
       - op: replace
         path: /metadata/namespace
-        value: dev
+        value: prod
   # SOPS Secret
   - target:
       name: app-sops-secret
@@ -101,4 +101,4 @@ patches:
     patch: |-
       - op: replace
         path: /metadata/namespace
-        value: dev
+        value: prod
