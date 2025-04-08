@@ -16,6 +16,10 @@ The `helm-charts` directory includes the Helm chart used to deploy the Flask app
 
 The `docs` directory serves as a Helm repository, hosting the chart packages and the `index.yaml` file. This allows for easy distribution and installation of the Helm chart.
 
+```
+helm repo add deepakraajesh https://deepakraajesh.github.io/devops-setup/
+```
+
 ### GitHub Actions CI (`.github/workflows/`)
 
 GitHub Actions workflows are configured to automatically build and push Docker images to a container registry whenever changes are pushed to the application code.
@@ -31,34 +35,56 @@ FluxCD is used to implement GitOps, ensuring that the Kubernetes cluster state m
 
 ## Directory Structure
 ```
-devops-setup/
-├── flask-python-app/
+devops-setup
+├── flask-python-app
 │   ├── app.py
 │   ├── requirements.txt
-│   └── ... (other application files)
-├── helm-charts/
-│   ├── Chart.yaml
-│   ├── values.yaml
-│   ├── templates/
-│   │   ├── deployment.yaml
-│   │   ├── service.yaml
-│   │   └── ... (other Kubernetes manifests)
-├── docs/
+│   ├── Dockerfile
+│   └── tests
+│       └── _test.py
+├── helm-charts
+│   ├── flask-app
+│   │   ├── Chart.yaml
+│   │   ├── values.yaml
+│   │   └── templates
+│   │       ├── deployment.yaml
+│   │       ├── externalsecret.yaml
+│   │       ├── hpa.yaml
+│   │       ├── secrets.yaml
+│   │       └── service.yaml
+│   └── flux-bootstrap
+│   │   └── flux-operator-values.yaml
+├── docs
 │   ├── index.yaml
 │   └── flask-app-chart-*.tgz (Helm chart packages)
-├── .github/workflows/
-│   ├── build-flask-app.yaml (GitHub Actions workflow)
-└── gitops-flux/
-    ├── dev/
-    │   ├── kustomization.yaml
-    │   ├── deployment.yaml
-    │   └── ... (other dev environment configs)
-    └── prod/
-        ├── kustomization.yaml
-        ├── deployment.yaml
-        └── ... (other prod environment configs)
+├── .github/workflows
+│   └── build-flask-app.yaml (GitHub Actions workflow)
+├── gitops-flux
+│   ├── clusters
+│   │   └── cluster 1 (minikube - You can add as many as clusters here)
+│   │       ├── app-kustomization.yaml
+│   │       ├── flux-components-kustomization.yaml
+│   │       ├── infra-kustomization.yaml
+│   │       └── observability-exporters-kustomization.yaml
+│   └── gitops-configs
+│       ├── apps
+│       │   ├── base
+│       │   │   ├── app-configs/
+│       │   │   └── utils/
+│       │   ├── dev
+│       │   │   ├── app-configs
+│       │   │   │   └── kustomization.yaml (patch from base)
+│       │   │   └── utils
+│       │   │       └── kustomization.yaml (patch from base)
+│       │   └── prod
+│       │   │   ├── app-configs
+│       │   │   │   └── kustomization.yaml (patch from base)
+│       │   │   └── utils
+│       │   │       └── kustomization.yaml (patch from base)
+│       ├── flux-components
+│       └── infra
+└── .gitignore
 ```
-
 
 ## Author
 
