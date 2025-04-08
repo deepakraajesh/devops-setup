@@ -44,7 +44,6 @@ jobs:
         run: |
           echo "Installing dependencies"
           pip install -r flask-python-app/requirements.txt
-          pip install pylint
 
       - name: Lint with Pylint
         run: |
@@ -55,8 +54,14 @@ jobs:
       - name: Security Scan with Bandit
         run: |
           echo "Security Scan"
-          pip install bandit
           bandit -r flask-python-app/ --confidence-level high --severity-level high | grep "HIGH" || true
+
+      # Unit Testing
+      - name: Run unit tests
+        run: |
+          echo "Running unit tests"
+          cd flask-python-app
+          pytest
 
       - name: Get GitHub Run Number
         id: run_number
