@@ -4,5 +4,9 @@
 # sops ignore
 *_sops.*
 
+# pytest cache
+__pycache__
+.pytest_cache
+
 # Other files to ignore
 *_ignore.yaml
