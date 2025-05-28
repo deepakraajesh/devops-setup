@@ -1,0 +1,8 @@
+---
+creation_rules:
+  # Generic Kubernetes Secrets
+  - path_regex: .*\_sops\.yaml
+    encrypted_regex: "^(data|stringData)$"
+    key_groups:
+      - age:
+         - age13lt3hfptsl6j4scfjra3gcc0pyulgle00wvq8hf87rg8h54cdc9qfu7tm6
