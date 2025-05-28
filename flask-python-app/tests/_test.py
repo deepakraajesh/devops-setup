@@ -18,7 +18,7 @@ def test_hello_no_env_vars(client, monkeypatch):
     response = client.get('/')
     assert response.status_code == 200
     assert b'Secret not found' in response.data
-    assert b'Sops secret not found' in response.data
+    assert b'SOPS secret not found' in response.data
 
 def test_hello_with_env_vars(client, monkeypatch):
     """Test when environment variables are set."""
